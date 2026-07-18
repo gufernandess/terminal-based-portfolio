@@ -155,3 +155,43 @@ layout). Valores padrão sugeridos:
 
 Sugestão de ajuste: reduzir o `font-size` base em ~10–15% em cada breakpoint
 (ex: 16px → 14px no tablet → 13px no celular), mantendo o restante do layout intacto.
+
+## Conteúdo
+
+Todo o texto de output (welcome/about/education/papers/career/projects/contacts/gui,
+em `en` e `pt`) está fechado em `CONTENT_DRAFT.md`, na raiz do repositório —
+é a fonte de verdade para os dados, sem pendências. Cada seção deve virar um
+módulo `content/*.ts` tipado (`Record<slug, { en, pt }>`); não parafrasear
+ou reescrever o texto já fechado ao portar para código.
+
+## Decisões de implementação
+
+Decisões de arquitetura, ferramental e formato de dados — não cobertas pelas
+seções acima, que descrevem o produto — estão registradas com o raciocínio
+completo em `docs/superpowers/specs/2026-07-18-terminal-portfolio-design.md`.
+Resumo:
+
+- **Ferramental**: Vite (`react-ts`) na raiz do repositório, pnpm, Vitest
+  para testes do parser e dos handlers de comando.
+- **Estrutura**: `content/` (dados tipados) → `commands/` (parser puro +
+  handlers por comando) → `terminal/` (componentes de UI) → `context/`
+  (estado global via `Context` + `useReducer`, sem lib externa de state management).
+- **Matching de argumento livre** (`career`, `papers`, `contacts goto`,
+  `projects goto`): normalizado (lowercase, trim, espaços/hifens
+  equivalentes), **match exato** — sem tolerância a erro de digitação
+  (distância de edição). Isso decide, na prática, a "tolerância a variações
+  simples de escrita" deixada em aberto na seção de Padrões de comportamento acima.
+- **`about` sem argumento**: mostra a bio (texto principal) seguida da
+  listagem estilizada dos subcomandos disponíveis (`skills`, `workspace`,
+  `hobbies`, `languages`) — combina o texto de `CONTENT_DRAFT.md` com o
+  padrão de "menu resumido" descrito acima.
+- **Estilo de `ListOutput`** (validado visualmente com o usuário): título em
+  `cyan`, seta `→` em `comment`, valor em `yellow`, sem chaves/tabela —
+  variação mais simples do que o exemplo `objeto/JSON` original, mesma
+  paleta.
+- **Autocomplete (Tab)**: prefixo único → autocompleta; múltiplos
+  candidatos → completa até o maior prefixo comum, sem popup de sugestões.
+- **Histórico e idioma**: apenas em memória (estado do `TerminalContext`),
+  sem persistência em `localStorage`.
+
+Consulte o spec completo para o raciocínio por trás de cada escolha.
