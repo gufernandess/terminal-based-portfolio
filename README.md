@@ -1,4 +1,8 @@
-# 💻 Terminal-Based Portfolio
+<p align="center">
+  <img src="public/icon.svg" width="120" height="120" alt="Terminal icon" />
+</p>
+
+# Terminal-Based Portfolio
 
 Portfólio pessoal simulando um terminal. Não há navegação de árvore de
 arquivos nem estado de "diretório atual" — cada comando é resolvido de forma
