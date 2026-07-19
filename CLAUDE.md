@@ -63,12 +63,13 @@ ao carregar o terminal, além de poder ser chamado manualmente a qualquer moment
 Lista todos os comandos disponíveis, com breve descrição de cada um.
 
 ### `about`
-Subcomandos: `skills`, `workspace`, `hobbies`, `languages`
-- `about` (sem argumento) → mostra um menu resumido com os subcomandos disponíveis
-- `about skills` → habilidades técnicas
+Subcomandos: `skills`, `workspace`, `hobbies`, `languages`, `all`
+- `about` (sem argumento) → mostra a bio seguida de um menu resumido com os subcomandos disponíveis
+- `about skills` → habilidades técnicas (lista com ícone por tecnologia)
 - `about workspace` → setup de trabalho (hardware, ferramentas, etc.)
 - `about hobbies` → hobbies pessoais
-- `about languages` → idiomas falados (não confundir com o comando `language`, que troca o idioma da interface)
+- `about languages` → idiomas falados, com nível na nomenclatura CEFR (ex: `B2`, `C2`) — não confundir com o comando `language`, que troca o idioma da interface
+- `about all` → imprime a bio e todas as seções acima de uma vez
 
 ### `education`
 Mostra formação acadêmica. Sem subcomandos definidos por ora (a estruturar quando o conteúdo for esquematizado).
@@ -76,26 +77,32 @@ Mostra formação acadêmica. Sem subcomandos definidos por ora (a estruturar qu
 ### `papers`
 Textos sobre artigos acadêmicos realizados.
 - `papers` (sem argumento) → menu resumido listando os artigos disponíveis
-- `papers <título do artigo>` → argumento livre (texto, mesmo padrão de `career`), mostra detalhes daquele artigo específico
+- `papers <título do artigo>` → argumento livre (texto), mostra detalhes daquele artigo específico, incluindo o link do PDF do artigo
+- `papers all` → imprime todos os artigos de uma vez, separados por um divisor
 
 ### `career`
 Experiência profissional.
 - `career` (sem argumento) → menu resumido listando as empresas/experiências disponíveis
-- `career <nome da empresa>` → argumento livre (texto), mostra detalhes daquela experiência específica
+- `career <nome da empresa>` → argumento livre (texto), mostra detalhes daquela experiência específica, seguido de uma lista horizontal com ícone das tecnologias utilizadas
+- `career all` → imprime todas as experiências de uma vez, separadas por um divisor
 - Atividades extracurriculares (INOVE, GEMP): **não incluídas** no escopo do portfólio
 
 ### `projects`
 Projetos principais e tecnologias utilizadas.
 - `projects` (sem argumento) → menu resumido listando os projetos disponíveis
-- `projects goto <nome do projeto>` → argumento livre (texto, não índice numérico), redireciona para o link do projeto ou GitHub, abrindo em **nova aba** (`window.open`)
+- `projects <nome do projeto>` → argumento livre (texto, não índice numérico), mostra detalhes do projeto (incluindo o link do GitHub como texto) seguido de uma lista horizontal com ícone das tecnologias utilizadas — **sem redirecionamento automático**, o link é apenas mostrado/clicável no próprio output
+- `projects all` → imprime todos os projetos de uma vez, separados por um divisor
 
 ### `contacts`
 Redes sociais e contato.
 - `contacts` (sem argumento) → menu resumido listando os contatos disponíveis
-- `contacts goto <nome>` → argumento livre (ex: `contacts goto linkedin`)
+- `contacts <nome>` → argumento livre (ex: `contacts linkedin`)
 - Contatos disponíveis: `linkedin`, `github`, `lattes` → abrem em **nova aba** (`window.open`)
 - `email` → não abre nova aba, usa `mailto:` (ou exibe o endereço diretamente no terminal)
 - Telefone: **não incluído**
+
+### `cv`
+Baixa o currículo em PDF no idioma ativo da interface (`language`). Abre em **nova aba** (`window.open`).
 
 ### `gui`
 Redireciona para a versão gráfica (GUI) do portfólio. Abre em **nova aba**.
@@ -131,8 +138,8 @@ dedicado para listas) a definir na implementação.
 
 - **Comando sem argumento/subcomando** (`about`, `projects`, `career`, `contacts`, `papers`): em vez de erro, mostrar um menu resumido com as opções disponíveis daquele comando.
 - **Comando não reconhecido**: mensagem amigável no estilo shell (ex: `command not found: <comando>`), usando a cor de erro (`#f7768e`) e respeitando o idioma ativo.
-- **Argumento livre para `goto` e `career`**: sem índice numérico — sempre por nome/texto livre. Validar correspondência (case-insensitive, idealmente com alguma tolerância a variações simples de escrita).
-- **Links externos** (`gui`, `projects goto`, `contacts goto`): abrem em nova aba via `window.open`, **exceto** `contacts goto email`, que usa `mailto:` na mesma aba.
+- **Argumento livre para `career`, `papers`, `projects` e `contacts`**: sem índice numérico — sempre por nome/texto livre. Validar correspondência (case-insensitive, idealmente com alguma tolerância a variações simples de escrita).
+- **Links externos** (`gui`, `cv`, `contacts`): abrem em nova aba via `window.open`, **exceto** `contacts email`, que usa `mailto:` na mesma aba. `projects` mostra o link do GitHub como texto/clicável no próprio output, sem redirecionamento automático.
 
 ## Decisões confirmadas (adicionais)
 
@@ -159,39 +166,46 @@ Sugestão de ajuste: reduzir o `font-size` base em ~10–15% em cada breakpoint
 ## Conteúdo
 
 Todo o texto de output (welcome/about/education/papers/career/projects/contacts/gui,
-em `en` e `pt`) está fechado em `CONTENT_DRAFT.md`, na raiz do repositório —
-é a fonte de verdade para os dados, sem pendências. Cada seção deve virar um
-módulo `content/*.ts` tipado (`Record<slug, { en, pt }>`); não parafrasear
-ou reescrever o texto já fechado ao portar para código.
+em `en` e `pt`) já foi portado para módulos `content/*.ts` tipados
+(`Record<slug, { en, pt }>`) — são a fonte de verdade atual para os dados.
+O rascunho original (`CONTENT_DRAFT.md`) e os documentos de brainstorm/spec/plano
+usados durante o desenvolvimento inicial (`docs/superpowers/`, `.superpowers/`)
+foram removidos ao final do desenvolvimento; o histórico do git preserva esse
+material caso seja necessário consultá-lo novamente.
 
 ## Decisões de implementação
 
-Decisões de arquitetura, ferramental e formato de dados — não cobertas pelas
-seções acima, que descrevem o produto — estão registradas com o raciocínio
-completo em `docs/superpowers/specs/2026-07-18-terminal-portfolio-design.md`.
-Resumo:
+Resumo das decisões de arquitetura, ferramental e formato de dados tomadas
+durante o desenvolvimento (o raciocínio completo por trás de cada uma vivia
+num spec de design que foi removido ao final do projeto — ver histórico do
+git se precisar dos detalhes):
 
 - **Ferramental**: Vite (`react-ts`) na raiz do repositório, pnpm, Vitest
   para testes do parser e dos handlers de comando.
 - **Estrutura**: `content/` (dados tipados) → `commands/` (parser puro +
   handlers por comando) → `terminal/` (componentes de UI) → `context/`
   (estado global via `Context` + `useReducer`, sem lib externa de state management).
-- **Matching de argumento livre** (`career`, `papers`, `contacts goto`,
-  `projects goto`): normalizado (lowercase, trim, espaços/hifens
-  equivalentes), **match exato** — sem tolerância a erro de digitação
-  (distância de edição). Isso decide, na prática, a "tolerância a variações
-  simples de escrita" deixada em aberto na seção de Padrões de comportamento acima.
+- **Matching de argumento livre** (`career`, `papers`, `projects`,
+  `contacts`): normalizado (lowercase, trim, espaços/hifens equivalentes),
+  **match exato** — sem tolerância a erro de digitação (distância de
+  edição). Isso decide, na prática, a "tolerância a variações simples de
+  escrita" deixada em aberto na seção de Padrões de comportamento acima.
+  `career`, `papers` e `projects` também aceitam o subcomando `all` para
+  imprimir todas as entradas da seção de uma vez.
 - **`about` sem argumento**: mostra a bio (texto principal) seguida da
   listagem estilizada dos subcomandos disponíveis (`skills`, `workspace`,
-  `hobbies`, `languages`) — combina o texto de `CONTENT_DRAFT.md` com o
-  padrão de "menu resumido" descrito acima.
+  `hobbies`, `languages`, `all`) — padrão de "menu resumido" descrito acima.
 - **Estilo de `ListOutput`** (validado visualmente com o usuário): título em
   `cyan`, seta `→` em `comment`, valor em `yellow`, sem chaves/tabela —
   variação mais simples do que o exemplo `objeto/JSON` original, mesma
-  paleta.
+  paleta. Itens reconhecidos como tecnologia/linguagem/hobby/idioma ganham
+  um ícone (`react-icons`) antes do valor.
+- **Tags de tecnologia** (`career`, `projects`): lista horizontal de badges
+  com ícone, separada do texto descritivo.
 - **Autocomplete (Tab)**: prefixo único → autocompleta; múltiplos
   candidatos → completa até o maior prefixo comum, sem popup de sugestões.
 - **Histórico e idioma**: apenas em memória (estado do `TerminalContext`),
   sem persistência em `localStorage`.
-
-Consulte o spec completo para o raciocínio por trás de cada escolha.
+- **Links externos**: centralizados em variáveis de ambiente `VITE_*` (ver
+  `.env.example`), lidas via `src/env.ts` — nenhum link fica hardcoded no
+  conteúdo.
