@@ -38,7 +38,7 @@ export const projects: ProjectEntry[] = [
   {
     slug: 'vertex-cover',
     url: ENV.projectVertexCoverUrl,
-    tags: ['Java', 'PLI'],
+    tags: ['Python', 'PLI'],
     body: {
       en: [
         'Vertex Cover PLI',
