@@ -14,12 +14,20 @@ export const Items = styled.div`
 `;
 
 export const Item = styled.div`
+  display: flex;
+  align-items: center;
   padding-left: 1em;
 `;
 
 export const Arrow = styled.span`
   color: ${({ theme }) => theme.colors.comment};
   margin-right: 0.5em;
+`;
+
+export const ItemIconWrap = styled.span`
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.4em;
 `;
 
 export const Label = styled.span`

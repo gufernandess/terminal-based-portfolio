@@ -8,6 +8,9 @@ export const Wrapper = styled.div`
 `;
 
 export const Tag = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
   padding: 0.15em 0.6em;
   border: 1px solid ${({ theme }) => theme.colors.comment};
   border-radius: 999px;

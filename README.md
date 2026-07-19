@@ -1,4 +1,4 @@
-# Terminal-Based Portfolio
+# 💻 Terminal-Based Portfolio
 
 Portfólio pessoal simulando um terminal. Não há navegação de árvore de
 arquivos nem estado de "diretório atual" — cada comando é resolvido de forma
@@ -9,6 +9,7 @@ com o tema **Tokyo Night**.
 
 - React + TypeScript + Vite
 - styled-components
+- react-icons (ícones de tecnologias/linguagens nas tags de skills/career/projects)
 - Vitest (parser e handlers de comando)
 - pnpm
 

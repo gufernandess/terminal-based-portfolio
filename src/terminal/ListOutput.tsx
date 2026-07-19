@@ -1,6 +1,17 @@
 import type { ListItem } from '../types';
 import { renderRichText } from './richText';
-import { Wrapper, Title, Items, Item, Arrow, Label, Description, Hint } from './ListOutput.styles';
+import { getItemIcon, ItemIconGlyph } from './itemIcons';
+import {
+  Wrapper,
+  Title,
+  Items,
+  Item,
+  Arrow,
+  ItemIconWrap,
+  Label,
+  Description,
+  Hint,
+} from './ListOutput.styles';
 
 interface ListOutputProps {
   title?: string;
@@ -21,15 +32,23 @@ export function ListOutput({ title, items, hint }: ListOutputProps) {
     <Wrapper>
       {title ? <Title>{title}</Title> : null}
       <Items>
-        {normalized.map((item, index) => (
-          <Item key={`${index}-${item.label}`}>
-            <Arrow>→</Arrow>
-            <Label>{item.label}{item.description ? ':' : ''}</Label>
-            {item.description ? (
-              <Description>{renderRichText(item.description)}</Description>
-            ) : null}
-          </Item>
-        ))}
+        {normalized.map((item, index) => {
+          const icon = getItemIcon(item.label);
+          return (
+            <Item key={`${index}-${item.label}`}>
+              <Arrow>→</Arrow>
+              {icon ? (
+                <ItemIconWrap aria-hidden="true">
+                  <ItemIconGlyph icon={icon} />
+                </ItemIconWrap>
+              ) : null}
+              <Label>{item.label}{item.description ? ':' : ''}</Label>
+              {item.description ? (
+                <Description>{renderRichText(item.description)}</Description>
+              ) : null}
+            </Item>
+          );
+        })}
       </Items>
       {hint ? <Hint>{renderRichText(hint)}</Hint> : null}
     </Wrapper>
