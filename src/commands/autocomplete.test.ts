@@ -19,6 +19,12 @@ describe('getCompletions', () => {
   });
 
   it('returns multiple candidates sharing a command prefix', () => {
-    expect(getCompletions('about ')).toEqual(['skills', 'workspace', 'hobbies', 'languages']);
+    expect(getCompletions('about ')).toEqual([
+      'skills',
+      'workspace',
+      'hobbies',
+      'languages',
+      'all',
+    ]);
   });
 });

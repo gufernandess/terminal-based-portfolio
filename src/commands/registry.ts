@@ -7,6 +7,7 @@ import { papers } from './papers';
 import { career } from './career';
 import { projects } from './projects';
 import { contacts } from './contacts';
+import { cv } from './cv';
 import { gui } from './gui';
 import { language } from './language';
 import { clear } from './clear';
@@ -22,6 +23,7 @@ export const registry: Record<string, CommandHandler> = {
   career,
   projects,
   contacts,
+  cv,
   gui,
   language,
   clear,

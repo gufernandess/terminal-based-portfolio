@@ -1,42 +1,9 @@
-import styled from 'styled-components';
 import type { ListItem } from '../types';
-
-const Wrapper = styled.div`
-  margin: 0.5em 0;
-`;
-
-const Title = styled.div`
-  color: ${({ theme }) => theme.colors.cyan};
-`;
-
-const Items = styled.div`
-  margin: 0.5em 0;
-`;
-
-const Item = styled.div`
-  padding-left: 1em;
-`;
-
-const Arrow = styled.span`
-  color: ${({ theme }) => theme.colors.comment};
-  margin-right: 0.5em;
-`;
-
-const Label = styled.span`
-  color: ${({ theme }) => theme.colors.yellow};
-`;
-
-const Description = styled.span`
-  color: ${({ theme }) => theme.colors.foreground};
-  margin-left: 1em;
-`;
-
-const Hint = styled.div`
-  color: ${({ theme }) => theme.colors.comment};
-`;
+import { renderRichText } from './richText';
+import { Wrapper, Title, Items, Item, Arrow, Label, Description, Hint } from './ListOutput.styles';
 
 interface ListOutputProps {
-  title: string;
+  title?: string;
   items: string[] | ListItem[];
   hint?: string;
 }
@@ -52,17 +19,19 @@ export function ListOutput({ title, items, hint }: ListOutputProps) {
 
   return (
     <Wrapper>
-      <Title>{title}</Title>
+      {title ? <Title>{title}</Title> : null}
       <Items>
         {normalized.map((item, index) => (
           <Item key={`${index}-${item.label}`}>
             <Arrow>→</Arrow>
-            <Label>{item.label}</Label>
-            {item.description ? <Description>{item.description}</Description> : null}
+            <Label>{item.label}{item.description ? ':' : ''}</Label>
+            {item.description ? (
+              <Description>{renderRichText(item.description)}</Description>
+            ) : null}
           </Item>
         ))}
       </Items>
-      {hint ? <Hint>{hint}</Hint> : null}
+      {hint ? <Hint>{renderRichText(hint)}</Hint> : null}
     </Wrapper>
   );
 }

@@ -1,7 +1,7 @@
-import type { CommandHandler } from '../types';
+import type { CommandHandler, OutputEntry } from '../types';
 import { resolveText } from '../i18n/resolveText';
 import { projects as projectsList, projectsMenuTitle, projectsHint } from '../content/projects';
-import { listEntry, localizedTextEntry, errorEntry } from './entries';
+import { listEntry, localizedTextEntry, errorEntry, tagsEntry, dividerEntry } from './entries';
 
 function normalize(value: string): string {
   return value.trim().toLowerCase().replace(/[\s-]+/g, '-');
@@ -20,33 +20,28 @@ export const projects: CommandHandler = (args, ctx) => {
     };
   }
 
-  const [sub, ...rest] = args;
-  if (sub.toLowerCase() !== 'goto' || rest.length === 0) {
-    return {
-      entries: [
-        errorEntry(
-          ctx.language === 'en' ? 'Usage: projects goto <name>' : 'Uso: projects goto <nome>',
-        ),
-      ],
-    };
+  if (args[0].toLowerCase() === 'all') {
+    const entries: OutputEntry[] = projectsList.flatMap((project, index) => [
+      ...(index > 0 ? [dividerEntry()] : []),
+      localizedTextEntry(project.body, ctx.language),
+      tagsEntry(project.tags),
+    ]);
+    return { entries };
   }
 
-  const query = normalize(rest.join(' '));
+  const query = normalize(args.join(' '));
   const project = projectsList.find((p) => normalize(p.slug) === query);
   if (!project) {
     return {
       entries: [
         errorEntry(
           ctx.language === 'en'
-            ? `Project not found: ${rest.join(' ')}`
-            : `Projeto não encontrado: ${rest.join(' ')}`,
+            ? `Project not found: ${args.join(' ')}`
+            : `Projeto não encontrado: ${args.join(' ')}`,
         ),
       ],
     };
   }
 
-  return {
-    entries: [localizedTextEntry(project.body, ctx.language)],
-    effect: { type: 'open-url', url: project.url },
-  };
+  return { entries: [localizedTextEntry(project.body, ctx.language), tagsEntry(project.tags)] };
 };

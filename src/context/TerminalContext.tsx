@@ -15,6 +15,7 @@ interface ExecuteCommandAction {
   effect?: CommandEffect;
   commandEntryId: string;
   recordHistory: boolean;
+  showCommand: boolean;
 }
 
 const initialState: TerminalState = {
@@ -36,13 +37,15 @@ function terminalReducer(state: TerminalState, action: ExecuteCommandAction): Te
 
   const language =
     action.effect?.type === 'set-language' ? action.effect.language : state.language;
-  const log = [...state.log, commandEntry(action.commandEntryId, action.input), ...action.entries];
+  const log = action.showCommand
+    ? [...state.log, commandEntry(action.commandEntryId, action.input), ...action.entries]
+    : [...state.log, ...action.entries];
 
   return { ...state, history, log, language };
 }
 
 interface TerminalContextValue extends TerminalState {
-  executeLine: (raw: string, options?: { recordHistory?: boolean }) => void;
+  executeLine: (raw: string, options?: { recordHistory?: boolean; showCommand?: boolean }) => void;
 }
 
 const TerminalContext = createContext<TerminalContextValue | null>(null);
@@ -51,7 +54,7 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(terminalReducer, initialState);
 
   const executeLine = useCallback(
-    (raw: string, options?: { recordHistory?: boolean }) => {
+    (raw: string, options?: { recordHistory?: boolean; showCommand?: boolean }) => {
       const result = runCommand(raw, { language: state.language, history: state.history });
       if (!result) return;
 
@@ -69,6 +72,7 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
         effect: result.effect,
         commandEntryId: crypto.randomUUID(),
         recordHistory: options?.recordHistory ?? true,
+        showCommand: options?.showCommand ?? true,
       });
     },
     [state.language, state.history],

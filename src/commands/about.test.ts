@@ -12,7 +12,7 @@ describe('about command', () => {
   it('shows skills for "about skills"', () => {
     const result = about(['skills'], { language: 'en', history: [] });
     const entry = result.entries[0];
-    expect(entry).toMatchObject({ kind: 'list', title: 'gustavo.skills' });
+    expect(entry).toMatchObject({ kind: 'list', title: undefined });
     if (entry.kind === 'list') {
       expect(entry.items).toContain('TypeScript');
     }
@@ -21,9 +21,11 @@ describe('about command', () => {
   it('localizes hobbies by language', () => {
     const en = about(['hobbies'], { language: 'en', history: [] });
     const pt = about(['hobbies'], { language: 'pt', history: [] });
-    expect(en.entries[0]).toMatchObject({ items: ['Reading', 'Gym', 'Running', 'Coding'] });
+    expect(en.entries[0]).toMatchObject({
+      items: ['Reading', 'Gym', 'Running', 'Coding', 'Cooking'],
+    });
     expect(pt.entries[0]).toMatchObject({
-      items: ['Leitura', 'Academia', 'Corrida', 'Programação'],
+      items: ['Leitura', 'Academia', 'Corrida', 'Programação', 'Culinária'],
     });
   });
 

@@ -1,14 +1,8 @@
 import { useEffect, useRef } from 'react';
-import styled from 'styled-components';
 import { useTerminal } from '../context/TerminalContext';
 import { OutputLine } from './OutputLine';
 import { CommandInput } from './CommandInput';
-
-const Window = styled.div`
-  height: 100vh;
-  overflow-y: auto;
-  padding: 1.5em;
-`;
+import { Window } from './TerminalWindow.styles';
 
 export function TerminalWindow() {
   const { log, executeLine } = useTerminal();
@@ -18,7 +12,7 @@ export function TerminalWindow() {
   useEffect(() => {
     if (hasRunWelcome.current) return;
     hasRunWelcome.current = true;
-    executeLine('welcome', { recordHistory: false });
+    executeLine('welcome', { recordHistory: false, showCommand: false });
   }, [executeLine]);
 
   useEffect(() => {

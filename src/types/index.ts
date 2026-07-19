@@ -14,7 +14,8 @@ export type OutputEntry =
   | { id: string; kind: 'command'; input: string }
   | { id: string; kind: 'text'; lines: string[] }
   | { id: string; kind: 'error'; message: string }
-  | { id: string; kind: 'list'; title: string; items: string[] | ListItem[]; hint?: string };
+  | { id: string; kind: 'list'; title?: string; items: string[] | ListItem[]; hint?: string }
+  | { id: string; kind: 'tags'; items: string[] };
 
 export type CommandEffect =
   | { type: 'open-url'; url: string }

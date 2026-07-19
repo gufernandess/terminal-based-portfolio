@@ -21,11 +21,19 @@ export function errorEntry(message: string): OutputEntry {
 }
 
 export function listEntry(
-  title: string,
+  title: string | undefined,
   items: string[] | ListItem[],
   hint?: string,
 ): OutputEntry {
   return { id: makeId(), kind: 'list', title, items, hint };
+}
+
+export function tagsEntry(items: string[]): OutputEntry {
+  return { id: makeId(), kind: 'tags', items };
+}
+
+export function dividerEntry(): OutputEntry {
+  return textEntry(['────────────────────────────────────────']);
 }
 
 export function commandNotFoundMessage(command: string, language: Language): string {

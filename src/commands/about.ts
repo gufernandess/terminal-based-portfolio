@@ -32,18 +32,35 @@ export const about: CommandHandler = (args, ctx) => {
     };
   }
 
+  if (sub === 'all') {
+    const titleFor = (label: string) =>
+      resolveText(
+        aboutSubcommandDescriptions.find((s) => s.label === label)!.description,
+        ctx.language,
+      );
+    return {
+      entries: [
+        localizedTextEntry(aboutBio, ctx.language),
+        listEntry(titleFor('skills'), aboutSkills),
+        listEntry(titleFor('workspace'), aboutWorkspace),
+        listEntry(titleFor('hobbies'), resolveText(aboutHobbies, ctx.language)),
+        listEntry(titleFor('languages'), resolveText(aboutLanguages, ctx.language)),
+      ],
+    };
+  }
+
   if (sub === 'skills') {
-    return { entries: [listEntry('gustavo.skills', aboutSkills)] };
+    return { entries: [listEntry(undefined, aboutSkills)] };
   }
   if (sub === 'workspace') {
-    return { entries: [listEntry('gustavo.workspace', aboutWorkspace)] };
+    return { entries: [listEntry(undefined, aboutWorkspace)] };
   }
   if (sub === 'hobbies') {
-    return { entries: [listEntry('gustavo.hobbies', resolveText(aboutHobbies, ctx.language))] };
+    return { entries: [listEntry(undefined, resolveText(aboutHobbies, ctx.language))] };
   }
   if (sub === 'languages') {
     return {
-      entries: [listEntry('gustavo.languages', resolveText(aboutLanguages, ctx.language))],
+      entries: [listEntry(undefined, resolveText(aboutLanguages, ctx.language))],
     };
   }
 

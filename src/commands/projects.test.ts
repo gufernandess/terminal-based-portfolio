@@ -8,22 +8,19 @@ describe('projects command', () => {
     expect(result.effect).toBeUndefined();
   });
 
-  it('returns a usage error when "goto" is missing', () => {
+  it('shows project details by exact slug, with no redirect effect', () => {
     const result = projects(['c3t'], { language: 'en', history: [] });
-    expect(result.entries[0]).toMatchObject({ kind: 'error' });
+    expect(result.entries[0].kind).toBe('text');
+    expect(result.effect).toBeUndefined();
   });
 
-  it('shows project details and opens the GitHub URL on "goto"', () => {
-    const result = projects(['goto', 'c3t'], { language: 'en', history: [] });
+  it('matches free text with spaces standing in for hyphens', () => {
+    const result = projects(['vertex', 'cover'], { language: 'en', history: [] });
     expect(result.entries[0].kind).toBe('text');
-    expect(result.effect).toEqual({
-      type: 'open-url',
-      url: 'https://github.com/gufernandess/c3t',
-    });
   });
 
   it('returns a "not found" error for an unknown project', () => {
-    const result = projects(['goto', 'nope'], { language: 'en', history: [] });
+    const result = projects(['nope'], { language: 'en', history: [] });
     expect(result.entries[0]).toMatchObject({ kind: 'error' });
     expect(result.effect).toBeUndefined();
   });

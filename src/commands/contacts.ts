@@ -20,26 +20,15 @@ export const contacts: CommandHandler = (args, ctx) => {
     };
   }
 
-  const [sub, ...rest] = args;
-  if (sub.toLowerCase() !== 'goto' || rest.length === 0) {
-    return {
-      entries: [
-        errorEntry(
-          ctx.language === 'en' ? 'Usage: contacts goto <name>' : 'Uso: contacts goto <nome>',
-        ),
-      ],
-    };
-  }
-
-  const query = normalize(rest.join(' '));
+  const query = normalize(args.join(' '));
   const contact = contactsList.find((c) => normalize(c.slug) === query);
   if (!contact) {
     return {
       entries: [
         errorEntry(
           ctx.language === 'en'
-            ? `Contact not found: ${rest.join(' ')}`
-            : `Contato não encontrado: ${rest.join(' ')}`,
+            ? `Contact not found: ${args.join(' ')}`
+            : `Contato não encontrado: ${args.join(' ')}`,
         ),
       ],
     };

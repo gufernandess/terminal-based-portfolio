@@ -1,22 +1,9 @@
-import styled from 'styled-components';
 import type { OutputEntry } from '../types';
 import { ListOutput } from './ListOutput';
-
-const Prompt = styled.span`
-  color: ${({ theme }) => theme.colors.comment};
-`;
-
-const CommandText = styled.span`
-  color: ${({ theme }) => theme.colors.foreground};
-`;
-
-const TextBlock = styled.div`
-  white-space: pre-wrap;
-`;
-
-const ErrorBlock = styled.div`
-  color: ${({ theme }) => theme.colors.red};
-`;
+import { TagList } from './TagList';
+import { renderRichText } from './richText';
+import { PROMPT } from '../content/prompt';
+import { CommandRow, Prompt, CommandText, TextBlock, ErrorBlock } from './OutputLine.styles';
 
 interface OutputLineProps {
   entry: OutputEntry;
@@ -26,17 +13,25 @@ export function OutputLine({ entry }: OutputLineProps) {
   switch (entry.kind) {
     case 'command':
       return (
-        <div>
-          <Prompt>guest@gustavo:~$ </Prompt>
+        <CommandRow>
+          <Prompt>{PROMPT}</Prompt>
           <CommandText>{entry.input}</CommandText>
-        </div>
+        </CommandRow>
       );
     case 'text':
-      return <TextBlock>{entry.lines.join('\n')}</TextBlock>;
+      return (
+        <TextBlock>
+          {entry.lines.map((line, index) => (
+            <div key={index}>{line === '' ? ' ' : renderRichText(line)}</div>
+          ))}
+        </TextBlock>
+      );
     case 'error':
       return <ErrorBlock>{entry.message}</ErrorBlock>;
     case 'list':
       return <ListOutput title={entry.title} items={entry.items} hint={entry.hint} />;
+    case 'tags':
+      return <TagList items={entry.items} />;
     default:
       return null;
   }

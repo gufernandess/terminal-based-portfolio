@@ -3,9 +3,10 @@ import { registry } from './registry';
 const commandNames = Object.keys(registry);
 
 const fixedSubcommands: Record<string, string[]> = {
-  about: ['skills', 'workspace', 'hobbies', 'languages'],
-  contacts: ['goto'],
-  projects: ['goto'],
+  about: ['skills', 'workspace', 'hobbies', 'languages', 'all'],
+  career: ['all'],
+  papers: ['all'],
+  projects: ['all'],
   language: ['english', 'portuguese'],
 };
 
