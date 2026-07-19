@@ -54,8 +54,8 @@ export function ListOutput({ title, items, hint }: ListOutputProps) {
     <Wrapper>
       <Title>{title}</Title>
       <Items>
-        {normalized.map((item) => (
-          <Item key={item.label}>
+        {normalized.map((item, index) => (
+          <Item key={`${index}-${item.label}`}>
             <Arrow>→</Arrow>
             <Label>{item.label}</Label>
             {item.description ? <Description>{item.description}</Description> : null}

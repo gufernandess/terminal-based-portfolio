@@ -13,6 +13,8 @@ interface ExecuteCommandAction {
   input: string;
   entries: OutputEntry[];
   effect?: CommandEffect;
+  commandEntryId: string;
+  recordHistory: boolean;
 }
 
 const initialState: TerminalState = {
@@ -21,12 +23,12 @@ const initialState: TerminalState = {
   log: [],
 };
 
-function commandEntry(input: string): OutputEntry {
-  return { id: crypto.randomUUID(), kind: 'command', input };
+function commandEntry(id: string, input: string): OutputEntry {
+  return { id, kind: 'command', input };
 }
 
 function terminalReducer(state: TerminalState, action: ExecuteCommandAction): TerminalState {
-  const history = [...state.history, action.input];
+  const history = action.recordHistory ? [...state.history, action.input] : state.history;
 
   if (action.effect?.type === 'clear') {
     return { ...state, history, log: [] };
@@ -34,13 +36,13 @@ function terminalReducer(state: TerminalState, action: ExecuteCommandAction): Te
 
   const language =
     action.effect?.type === 'set-language' ? action.effect.language : state.language;
-  const log = [...state.log, commandEntry(action.input), ...action.entries];
+  const log = [...state.log, commandEntry(action.commandEntryId, action.input), ...action.entries];
 
   return { ...state, history, log, language };
 }
 
 interface TerminalContextValue extends TerminalState {
-  executeLine: (raw: string) => void;
+  executeLine: (raw: string, options?: { recordHistory?: boolean }) => void;
 }
 
 const TerminalContext = createContext<TerminalContextValue | null>(null);
@@ -49,7 +51,7 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(terminalReducer, initialState);
 
   const executeLine = useCallback(
-    (raw: string) => {
+    (raw: string, options?: { recordHistory?: boolean }) => {
       const result = runCommand(raw, { language: state.language, history: state.history });
       if (!result) return;
 
@@ -65,6 +67,8 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
         input: raw,
         entries: result.entries,
         effect: result.effect,
+        commandEntryId: crypto.randomUUID(),
+        recordHistory: options?.recordHistory ?? true,
       });
     },
     [state.language, state.history],

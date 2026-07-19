@@ -18,7 +18,7 @@ export function TerminalWindow() {
   useEffect(() => {
     if (hasRunWelcome.current) return;
     hasRunWelcome.current = true;
-    executeLine('welcome');
+    executeLine('welcome', { recordHistory: false });
   }, [executeLine]);
 
   useEffect(() => {
