@@ -1,4 +1,4 @@
-import type { CommandHandler } from '../types';
+import type { CommandHandler, ListItem } from '../types';
 import { resolveText } from '../i18n/resolveText';
 import { contacts as contactsList, contactsMenuTitle, contactsHint } from '../content/contacts';
 import { listEntry, errorEntry, textEntry } from './entries';
@@ -9,11 +9,15 @@ function normalize(value: string): string {
 
 export const contacts: CommandHandler = (args, ctx) => {
   if (args.length === 0) {
+    const items: ListItem[] = contactsList.map((c) => ({
+      label: c.slug,
+      description: c.value,
+    }));
     return {
       entries: [
         listEntry(
           resolveText(contactsMenuTitle, ctx.language),
-          contactsList.map((c) => c.slug),
+          items,
           resolveText(contactsHint, ctx.language),
         ),
       ],

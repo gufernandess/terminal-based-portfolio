@@ -2,11 +2,16 @@ import { describe, expect, it } from 'vitest';
 import { contacts } from './contacts';
 
 describe('contacts command', () => {
-  it('lists contacts when called with no args', () => {
+  it('lists contacts with their links when called with no args', () => {
     const result = contacts([], { language: 'en', history: [] });
     expect(result.entries[0]).toMatchObject({
       kind: 'list',
-      items: ['linkedin', 'github', 'lattes', 'email'],
+      items: [
+        { label: 'linkedin', description: 'https://www.linkedin.com/in/gustafernandes/' },
+        { label: 'github', description: 'https://github.com/gufernandess' },
+        { label: 'lattes', description: 'http://lattes.cnpq.br/2141189939286232' },
+        { label: 'email', description: 'gustavofernandescc@gmail.com' },
+      ],
     });
   });
 
