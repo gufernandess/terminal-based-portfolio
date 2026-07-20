@@ -97,5 +97,3 @@ src/
 ## Documentação adicional
 
 - `CLAUDE.md` — especificação do produto e decisões de implementação
-- `docs/superpowers/specs/` — spec de design detalhada
-- `docs/superpowers/plans/` — plano de implementação task a task

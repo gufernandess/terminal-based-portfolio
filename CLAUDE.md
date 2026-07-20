@@ -166,19 +166,13 @@ Sugestão de ajuste: reduzir o `font-size` base em ~10–15% em cada breakpoint
 ## Conteúdo
 
 Todo o texto de output (welcome/about/education/papers/career/projects/contacts/gui,
-em `en` e `pt`) já foi portado para módulos `content/*.ts` tipados
+em `en` e `pt`) está portado para módulos `content/*.ts` tipados
 (`Record<slug, { en, pt }>`) — são a fonte de verdade atual para os dados.
-O rascunho original (`CONTENT_DRAFT.md`) e os documentos de brainstorm/spec/plano
-usados durante o desenvolvimento inicial (`docs/superpowers/`, `.superpowers/`)
-foram removidos ao final do desenvolvimento; o histórico do git preserva esse
-material caso seja necessário consultá-lo novamente.
 
 ## Decisões de implementação
 
 Resumo das decisões de arquitetura, ferramental e formato de dados tomadas
-durante o desenvolvimento (o raciocínio completo por trás de cada uma vivia
-num spec de design que foi removido ao final do projeto — ver histórico do
-git se precisar dos detalhes):
+durante o desenvolvimento:
 
 - **Ferramental**: Vite (`react-ts`) na raiz do repositório, pnpm, Vitest
   para testes do parser e dos handlers de comando.
