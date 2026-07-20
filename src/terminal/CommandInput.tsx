@@ -1,4 +1,4 @@
-import { useState, type KeyboardEvent } from 'react';
+import { forwardRef, useState, type KeyboardEvent } from 'react';
 import { useTerminal } from '../context/TerminalContext';
 import { getCompletions } from '../commands/autocomplete';
 import { PROMPT } from '../content/prompt';
@@ -13,7 +13,7 @@ function longestCommonPrefix(values: string[]): string {
   });
 }
 
-export function CommandInput() {
+export const CommandInput = forwardRef<HTMLInputElement>(function CommandInput(_props, ref) {
   const { history, executeLine } = useTerminal();
   const [value, setValue] = useState('');
   const [historyIndex, setHistoryIndex] = useState<number | null>(null);
@@ -78,6 +78,7 @@ export function CommandInput() {
     <Row>
       <Prompt>{PROMPT}</Prompt>
       <Input
+        ref={ref}
         autoFocus
         value={value}
         onChange={(event) => setValue(event.target.value)}
@@ -87,4 +88,4 @@ export function CommandInput() {
       />
     </Row>
   );
-}
+});

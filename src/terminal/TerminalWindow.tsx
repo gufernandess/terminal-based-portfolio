@@ -7,6 +7,7 @@ import { Window } from './TerminalWindow.styles';
 export function TerminalWindow() {
   const { log, executeLine } = useTerminal();
   const bottomRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const hasRunWelcome = useRef(false);
 
   useEffect(() => {
@@ -19,12 +20,17 @@ export function TerminalWindow() {
     bottomRef.current?.scrollIntoView({ block: 'end' });
   }, [log]);
 
+  function handleClick() {
+    if (window.getSelection()?.toString()) return;
+    inputRef.current?.focus();
+  }
+
   return (
-    <Window>
+    <Window onClick={handleClick}>
       {log.map((entry) => (
         <OutputLine key={entry.id} entry={entry} />
       ))}
-      <CommandInput />
+      <CommandInput ref={inputRef} />
       <div ref={bottomRef} />
     </Window>
   );
